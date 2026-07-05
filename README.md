@@ -2,7 +2,7 @@
 
 # ⚡ Flash Agents
 
-**40 one-shot AI agents on [Cerebras Inference](https://inference-docs.cerebras.ai) — sub-second tasks, zero chat overhead.**
+**40 one-shot AI agents on [Cerebras Inference](https://inference-docs.cerebras.ai) — sub-second UX, zero chat overhead.**
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Agents](https://img.shields.io/badge/agents-40-amber.svg)](#-agent-catalog)
@@ -11,11 +11,47 @@
 [![Cerebras](https://img.shields.io/badge/inference-Cerebras-ff6b00)](https://cloud.cerebras.ai)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](backend/app/main.py)
 
-*Paste → Run → Structured JSON in ~300–800ms. No chains. No memory. No 429 spam.*
+<img src="docs/demo.svg" alt="Flash Review — paste code, get JSON in milliseconds" width="720"/>
 
-[Quick Start](#-quick-start) · [Agents](#-agent-catalog) · [Architecture](#-architecture) · [Why Flash Agents?](#-why-flash-agents)
+*Paste → Run → Structured JSON. One call. No agent loops.*
+
+[Quick Start](#-quick-start) · [Example](#-example-input--output) · [Benchmarks](#-benchmarks) · [Architecture](#-architecture) · [vs LangChain](#-why-flash-agents-instead-of-langchain--crewai--openai-agents)
 
 </div>
+
+---
+
+## 📋 Example input / output
+
+**Agent:** `Flash Review` (GLM 4.7) · **Latency:** ~2.5s end-to-end (see [benchmarks](#-benchmarks))
+
+**Input**
+```js
+function divide(a, b) {
+  return a / b;
+}
+// no zero check
+```
+
+**Output**
+```json
+{
+  "summary": "Division sans garde — risque de crash runtime.",
+  "score": 62,
+  "critical": [
+    {
+      "line": "divide",
+      "issue": "Division par zéro non gérée",
+      "fix": "if (b === 0) throw new Error('Division by zero')"
+    }
+  ],
+  "warnings": [],
+  "positives": ["Fonction concise, lisible"],
+  "verdict": "fix_first"
+}
+```
+
+Same pattern for all 40 agents: **one input → one JSON object → done.**
 
 ---
 
@@ -29,15 +65,54 @@
 | **GPT OSS 120B** (`gpt-oss-120b`) | Reasoning, product, career, security | 20 |
 | **Gemma 4 31B** (`gemma-4-31b`) | Vision — screenshots, OCR, UI audit | 7 |
 
-Built for developers who want **ChatGPT-speed UX** without building a chatbot.
+Built for developers who want **instant task completion** without building a chatbot.
+
+## 📊 Benchmarks
+
+Measured on **Flash Review** (`zai-glm-4.7`), local Mac, Cerebras free tier, 5 runs with 15s rate-gate:
+
+| Metric | Flash Agents | Typical multi-agent chain |
+|--------|-------------|---------------------------|
+| **P50** | **2.6s** | 15–45s (plan → tool → synthesize) |
+| **P95** | **3.6s** | 30–90s |
+| **API calls** | **1** | 5–50+ |
+| **Output** | Valid JSON | Markdown + parsing needed |
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│ React UI    │────▶│ FastAPI proxy│────▶│ Cerebras API    │
-│ onboarding  │     │ rate-gate    │     │ GLM · 120B ·    │
-│ image upload│     │ JSON schema  │     │ Gemma vision    │
-└─────────────┘     └──────────────┘     └─────────────────┘
+Run 1: 3621 ms  (cold)
+Run 2: 2610 ms
+Run 3: 2717 ms
+Run 4: 2388 ms  ← P50 neighborhood
+Run 5: 2543 ms
 ```
+
+Reproduce: `./scripts/benchmark.sh` (requires running backend + `CEREBRAS_API_KEY`).
+
+> **Why not 300ms?** Cerebras inference is fast; end-to-end includes network + JSON generation. The win is **1 call vs 10** — not raw token speed alone.
+
+## 🏗 Architecture
+
+```mermaid
+flowchart LR
+    A[Request] --> B[FastAPI Router]
+    B --> C[Agent Registry]
+    C --> D[Rate Gate]
+    D --> E[Cerebras API]
+    E --> F[JSON Response]
+    F --> G[Guide + Latency ms]
+
+    style A fill:#1a1a24,stroke:#2a2a38,color:#e8e8f0
+    style E fill:#ff6b2c22,stroke:#ff6b2c,color:#ff6b2c
+    style F fill:#3dd68c22,stroke:#3dd68c,color:#3dd68c
+```
+
+| Layer | Role |
+|-------|------|
+| **Request** | Text or image (vision agents) from React UI |
+| **Router** | `POST /api/run` → picks agent by `agent_id` |
+| **Agent** | System prompt + model + JSON schema |
+| **Cerebras** | OpenAI-compatible inference (GLM / 120B / Gemma) |
+| **JSON** | Parsed result + `how_to` + `next_steps` + `latency_ms` |
 
 ## ✨ Highlights
 
@@ -58,7 +133,7 @@ Built for developers who want **ChatGPT-speed UX** without building a chatbot.
 ### 2. Install & run
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/flash-agents.git
+git clone https://github.com/anthonyoccelli33480-ctrl/flash-agents.git
 cd flash-agents
 cp .env.example .env   # add CEREBRAS_API_KEY=csk-...
 
@@ -143,24 +218,24 @@ Flash UI Review · Flash Diagram · Flash Wireframe · Flash OCR · Flash A11y �
 
 Full reference → [docs/AGENTS.md](docs/AGENTS.md)
 
-## 🆚 Why Flash Agents?
+## 🆚 Why Flash Agents instead of LangChain / CrewAI / OpenAI Agents?
 
-| | Flash Agents | Typical agent framework |
-|--|--------------|-------------------------|
-| Latency | **~300–800ms** visible | Hidden in multi-step chains |
-| Calls per task | **1** | 5–50+ tool loops |
-| Output | **JSON schema** | Free-form markdown |
-| Infra | FastAPI + React | LangChain, vector DB, memory |
-| Best for | **Single-shot tasks** | Long-running autonomous agents |
+| | **Flash Agents** | **LangChain** | **CrewAI** | **OpenAI Agents SDK** |
+|--|------------------|---------------|------------|------------------------|
+| **Mental model** | One-shot task | Chains & graphs | Multi-agent crew | Tool loop |
+| **Calls per task** | **1** | 3–20+ | 10–50+ | 5–30+ |
+| **Output format** | **Forced JSON** | Usually text | Markdown reports | Tool results + text |
+| **Latency (typical)** | **2–4s** | 10–60s | 30–120s | 5–40s |
+| **Infra required** | FastAPI + React | LangSmith, vector DB… | Roles, tasks, memory | OpenAI + tools setup |
+| **Inference** | **Cerebras** (GLM, 120B, Gemma) | Provider-agnostic | Provider-agnostic | OpenAI only |
+| **Best for** | Dev tools, quick JSON tasks | Complex pipelines | Autonomous teams | OpenAI ecosystem |
+| **Learning curve** | Clone & run | Steep | Medium | Medium |
 
-> Not a replacement for Jarvis, AutoGPT, or CrewAI — a **complement** for when you want speed and structure.
+**Use Flash Agents when:** you want a code review, SQL query, MVP scope, or UI audit in **one click** — not a research project.
 
-## 🏗 Architecture
+**Use LangChain/CrewAI when:** you need multi-step autonomy, RAG, or agents that collaborate over minutes.
 
-- **Frontend** — React 19 + Vite, onboarding flow, image upload for vision agents
-- **Backend** — FastAPI proxy, Cerebras OpenAI-compatible client, retry on `queue_exceeded`
-- **Rate gate** — configurable interval (`FLASH_RATE_INTERVAL_SEC`, default 15s)
-- **Guides** — each agent returns `how_to` + `next_steps` after every run
+> Complement, not competitor — Flash Agents is what Cerebras feels like without the framework tax.
 
 ## ➕ Add an agent
 
