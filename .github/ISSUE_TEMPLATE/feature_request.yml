@@ -1,0 +1,26 @@
+name: Feature request
+description: New agent or improvement?
+title: "[idea]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: dropdown
+    id: model
+    attributes:
+      label: Suggested Cerebras model
+      options:
+        - zai-glm-4.7
+        - gpt-oss-120b
+        - gemma-4-31b
+        - not sure

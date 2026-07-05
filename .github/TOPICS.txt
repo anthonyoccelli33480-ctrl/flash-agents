@@ -1,0 +1,20 @@
+# GitHub topics — paste when creating/editing the repo
+# gh repo edit --add-topic TOPIC (repeat for each)
+
+cerebras
+llm-agents
+ai-agents
+inference
+fastapi
+react
+typescript
+python
+developer-tools
+code-review
+vision-llm
+gemma
+structured-output
+open-source
+one-shot-agents
+machine-learning
+nlp

@@ -1,0 +1,33 @@
+:root {
+  --bg: #0a0a0c;
+  --surface: #12121a;
+  --surface-2: #1a1a24;
+  --border: #2a2a38;
+  --text: #e8e8f0;
+  --muted: #8888a0;
+  --accent: #ff6b2c;
+  --accent-dim: #ff6b2c33;
+  --green: #3dd68c;
+  --yellow: #f5c542;
+  --red: #ff5c5c;
+  --mono: "IBM Plex Mono", monospace;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+}
