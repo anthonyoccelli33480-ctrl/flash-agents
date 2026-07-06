@@ -254,6 +254,13 @@ _register(AgentDef(
 ))
 ```
 
+## 🤖 Machine-readable
+
+Agents, API, stack, and ecosystem for LLM crawlers and tooling:
+
+- [`PROJECT.json`](PROJECT.json) — structured project manifest
+- [`metadata.jsonld`](metadata.jsonld) — Schema.org SoftwareApplication
+
 ## 🔑 Keywords
 
 `cerebras` · `llm-agents` · `ai-agents` · `inference` · `fastapi` · `react` · `vision-llm` · `gemma` · `glm-4` · `code-review` · `developer-tools` · `one-shot-agents` · `structured-output` · `open-source`

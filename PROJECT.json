@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "flash-agents",
+  "displayName": "Flash Agents",
+  "version": "1.0.0",
+  "description": "40 one-shot AI agents on Cerebras Inference — sub-second structured JSON tasks, vision, rate-safe.",
+  "url": "https://github.com/anthonyoccelli33480-ctrl/flash-agents",
+  "license": "MIT",
+  "author": {
+    "name": "Anthony Occelli",
+    "url": "https://github.com/anthonyoccelli33480-ctrl"
+  },
+  "ecosystem": {
+    "role": "cerebras-showcase",
+    "related": [
+      {
+        "name": "devstral-lab",
+        "url": "https://github.com/anthonyoccelli33480-ctrl/devstral-lab",
+        "relation": "mistral-code-phase-1"
+      },
+      {
+        "name": "mistral-bureau",
+        "url": "https://github.com/anthonyoccelli33480-ctrl/mistral-bureau",
+        "relation": "mistral-fr-phase-2"
+      }
+    ]
+  },
+  "idea": "Showcase ultra-fast Cerebras inference with one-task-one-call agents. No chat loops, no LangChain — paste, run, JSON.",
+  "features": [
+    "40 one-shot agents",
+    "Structured JSON output",
+    "7 vision agents (Gemma 4 31B)",
+    "Rate gate anti-429",
+    "Onboarding + local API key",
+    "macOS double-click launcher"
+  ],
+  "techStack": {
+    "backend": ["Python 3.12", "FastAPI", "httpx", "uvicorn"],
+    "frontend": ["React 19", "Vite", "TypeScript"],
+    "inference": ["Cerebras API", "OpenAI-compatible"],
+    "models": ["zai-glm-4.7", "gpt-oss-120b", "gemma-4-31b"]
+  },
+  "agents": {
+    "count": 40,
+    "categories": ["dev", "career", "product", "ai", "content", "security", "vision"]
+  },
+  "api": {
+    "basePath": "/api",
+    "port": 8787,
+    "frontendPort": 5173,
+    "endpoints": [
+      { "method": "GET", "path": "/api/health", "description": "Health + Cerebras key status" },
+      { "method": "GET", "path": "/api/agents", "description": "List all agents" },
+      { "method": "POST", "path": "/api/run", "description": "Run one agent (text or images)" },
+      { "method": "POST", "path": "/api/setup/key", "description": "Save CEREBRAS_API_KEY to .env" }
+    ]
+  },
+  "secrets": {
+    "envFile": ".env",
+    "key": "CEREBRAS_API_KEY",
+    "neverInBrowser": true
+  },
+  "keywords": [
+    "cerebras", "llm-agents", "inference", "fastapi", "react", "vision-llm",
+    "structured-output", "one-shot-agents", "developer-tools"
+  ]
+}
