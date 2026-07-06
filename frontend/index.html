@@ -64,6 +64,21 @@
   }
 }
     </script>
+    <!-- Privacy-friendly analytics (GoatCounter, no cookies, no personal data).
+         To activate: create a free site at https://www.goatcounter.com/ then set CODE below
+         to your subdomain (e.g. "anthony" if your dashboard is anthony.goatcounter.com).
+         Until CODE is set, nothing loads and no request is made. -->
+    <script>
+      (function () {
+        var CODE = "YOURCODE"; // <-- put your GoatCounter subdomain here
+        if (CODE === "YOURCODE") return;
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "//gc.zgo.at/count.js";
+        s.setAttribute("data-goatcounter", "https://" + CODE + ".goatcounter.com/count");
+        document.head.appendChild(s);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
