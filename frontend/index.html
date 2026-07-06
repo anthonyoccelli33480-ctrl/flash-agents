@@ -67,6 +67,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Preview banner: only shows when the backend is unreachable (e.g. GitHub Pages). Never in local dev. -->
+    <div id="preview-banner" role="status" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#161616;color:#e9e9ee;font:13px/1.5 system-ui,-apple-system,sans-serif;padding:10px 18px;text-align:center;border-top:1px solid #2c2c2c;box-shadow:0 -2px 12px rgba(0,0,0,.4)">
+      Live preview — the interface is static here (no backend). Clone the repo and run it locally to use the agents.
+      <a href="https://github.com/anthonyoccelli33480-ctrl/flash-agents#-quick-start" style="color:#ff7a1a;text-decoration:none;font-weight:600;margin-left:6px">Quick start &#8594;</a>
+      <span onclick="this.parentNode.remove()" style="cursor:pointer;margin-left:14px;opacity:.6" aria-label="Dismiss">&#10005;</span>
+    </div>
+    <script>
+      (function () {
+        function show() { var b = document.getElementById("preview-banner"); if (b) b.style.display = "block"; }
+        try { fetch("/api/health", { cache: "no-store" }).then(function (r) { if (!r || !r.ok) show(); }).catch(show); }
+        catch (e) { show(); }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
