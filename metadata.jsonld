@@ -19,7 +19,10 @@
     "@type": "Person",
     "name": "Anthony Occelli"
   },
-  "programmingLanguage": ["Python", "TypeScript"],
+  "programmingLanguage": [
+    "Python",
+    "TypeScript"
+  ],
   "featureList": [
     "40 one-shot agents",
     "Cerebras GLM 4.7, GPT OSS 120B, Gemma 4 31B",
@@ -35,10 +38,18 @@
   },
   "isPartOf": {
     "@type": "CreativeWorkSeries",
-    "name": "Anthony Occelli LLM Showcase Stack",
+    "name": "Anthony Occelli — LLM Showcase Stack",
     "hasPart": [
-      { "@type": "SoftwareApplication", "name": "Devstral Lab", "url": "https://github.com/anthonyoccelli33480-ctrl/devstral-lab" },
-      { "@type": "SoftwareApplication", "name": "Mistral Bureau", "url": "https://github.com/anthonyoccelli33480-ctrl/mistral-bureau" }
+      {
+        "@type": "SoftwareApplication",
+        "name": "Devstral Lab",
+        "url": "https://github.com/anthonyoccelli33480-ctrl/devstral-lab"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Mistral Bureau",
+        "url": "https://github.com/anthonyoccelli33480-ctrl/mistral-bureau"
+      }
     ]
   }
 }
