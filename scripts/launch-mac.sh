@@ -3,7 +3,8 @@
 
 set -euo pipefail
 
-PROJECT="/Users/anthonyoccelli/projects/flash-agents"
+# Repo root, derived from this script's location (portable — works wherever the repo is cloned).
+PROJECT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_DIR="$HOME/Library/Logs/Flash Agents"
 FRONT_URL="http://127.0.0.1:5173"
 
